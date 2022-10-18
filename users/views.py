@@ -34,5 +34,5 @@ class ProfileView(LoginRequiredMixin, RetrieveUpdateDestroyAPIView):
 
 
     def get_queryset(self): 
-        print('requested data', self.kwargs['pk']) 
+        print('requested data', self.kwargs['pk'])  
         return self.queryset.all() 
