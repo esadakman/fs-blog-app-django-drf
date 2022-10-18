@@ -3,8 +3,11 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
+from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.generics import RetrieveUpdateDestroyAPIView 
+from .serializers import RegisterSerializer, ProfileUpdateForm
+from .models import Profile
 
-from .serializers import RegisterSerializer
 
 
 class RegisterView(CreateAPIView):
@@ -23,3 +26,13 @@ class RegisterView(CreateAPIView):
             data['error'] = 'User dont have token. Please login'
         headers = self.get_success_headers(serializer.data)
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ProfileView(LoginRequiredMixin, RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileUpdateForm 
+
+
+    def get_queryset(self): 
+        print('requested data', self.kwargs['pk']) 
+        return self.queryset.all() 

@@ -1,18 +1,16 @@
 from rest_framework import serializers, validators
 from django.contrib.auth.models import User
-from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
-from .models import Profile
 from dj_rest_auth.serializers import TokenSerializer
+from .models import Profile
 
 
 class RegisterSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(
         required=True,
-        validators=[UniqueValidator(queryset=User.objects.all(),  # ? for unique emails
-                                    message='This email has been used.')]
+        validators=[validators.UniqueValidator(queryset=User.objects.all())]
     )
 
     password = serializers.CharField(
@@ -25,13 +23,14 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(
         write_only=True,
         required=True,
+        validators=[validate_password], 
         style={"input_type": "password"}
     )
 
     class Meta:
         model = User
         fields = [
-            # 'id',
+            'id',
             'username',
             'first_name',
             'last_name',
@@ -44,8 +43,17 @@ class RegisterSerializer(serializers.ModelSerializer):
             "password": {"write_only": True},
             "password2": {"write_only": True},
             'first_name': {'required': True},
-            'last_name': {'required': True},
+            'last_name': {'required': True}
         }
+
+    def create(self, validated_data):
+        password = validated_data.get("password")
+        validated_data.pop("password2")
+
+        user = User.objects.create(**validated_data)
+        user.password = make_password(password)
+        user.save()
+        return user
 
     def validate(self, data):
         if data["password"] != data["password2"]:
@@ -53,25 +61,11 @@ class RegisterSerializer(serializers.ModelSerializer):
                 {"password": "Password fields didn't match."})
         return data
 
-    def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
-
-        return user
-
 
 class UserTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username',
-                  'email')
+        fields = ('id', 'email', 'first_name', 'last_name')
 
 
 class CustomTokenSerializer(TokenSerializer):
@@ -81,12 +75,10 @@ class CustomTokenSerializer(TokenSerializer):
     class Meta(TokenSerializer.Meta):
         fields = ('key', 'user')
 
-
-class ProfileUpdateForm(serializers.ModelSerializer):
+class ProfileUpdateForm(serializers.ModelSerializer): 
     user = UserTokenSerializer()
-
     class Meta:
-        model = Profile
+        model = Profile 
         fields = (
             'image',
             'user'
@@ -106,7 +98,7 @@ class ProfileUpdateForm(serializers.ModelSerializer):
         user.email = user_data.get(
             'email',
             user.email
-        )
+         )
         user.save()
 
         return instance
