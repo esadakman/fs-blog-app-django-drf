@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Category, Post,  Like, Comment, View
+from .models import Category, Post,  Like, Comment, View
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "content",
-            "date_posted",
+            "time_stamp",
             "user",
         )
 
@@ -60,7 +60,7 @@ class PostSerializer(serializers.ModelSerializer):
             "view_count",
             "post_comment",
             "comment_count",
-            "post_like"
+            "post_like",
             "like_count",
         )
         read_only_fields = (
