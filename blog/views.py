@@ -11,6 +11,7 @@ from .serializers import (
 )
 from rest_framework import permissions
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .pagination import  MyLimitOffsetPagination
 
 # Create your views here.
 
@@ -25,6 +26,7 @@ class PostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = MyLimitOffsetPagination
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
