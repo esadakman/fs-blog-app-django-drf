@@ -8,11 +8,11 @@ from .serializers import (
     PostSerializer,
     LikeSerializer,
     CommentSerializer,
+    PostUserSerializer
 )
 from rest_framework import permissions
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .pagination import  MyLimitOffsetPagination
-
 # Create your views here.
 
 
@@ -25,8 +25,8 @@ class CategoryView(generics.ListCreateAPIView):
 class PostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = MyLimitOffsetPagination
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -41,6 +41,11 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         View.objects.create(user=request.user, post=instance)
         return Response(serializer.data)
 
+class LikeView(generics.ListCreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+     
 
 class CommentView(generics.CreateAPIView):
     queryset = Comment.objects.all()
@@ -53,3 +58,4 @@ class CommentView(generics.CreateAPIView):
         user = self.request.user
         comments = Comment.objects.filter(blog=blog, user=user)
         serializer.save(blog=blog, user=user)
+

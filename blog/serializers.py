@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Post,  Like, Comment, View
+from .models import Category, Post,  Like, Comment, View 
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -22,6 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "time_stamp",
             "user",
         )
+        # fields = '__all__'
 
 
 class LikeSerializer(serializers.ModelSerializer):
@@ -29,7 +30,7 @@ class LikeSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField()
 
     class Meta:
-        model = Like
+        model = Like  
         fields = (
             "id",
             "user",
@@ -45,26 +46,26 @@ class PostSerializer(serializers.ModelSerializer):
     comment_count = serializers.SerializerMethodField()
     view_count = serializers.SerializerMethodField()
 
-    
     class Meta:
         model = Post
+        # fields = '__all__'
         fields = (
             "id",
             "title",
             "author",
-            "category", 
+            "category",
             "content",
             "post_image",
-            "date_posted",  
+            "date_posted",
             "slug",
-            "view_count",
             "post_comment",
-            "comment_count",
             "post_like",
+            "comment_count",
+            "view_count",
             "like_count",
         )
         read_only_fields = (
-            "date_posted", 
+            "date_posted",
             "slug",
         )
 
@@ -73,6 +74,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_comment_count(self, obj):
         return Comment.objects.filter(blog=obj.id).count()
- 
+
     def get_view_count(self, obj):
         return View.objects.filter(post=obj.id).count()
+
+

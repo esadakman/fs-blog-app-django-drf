@@ -60,7 +60,7 @@ class Comment(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
-        return f"added by {self.user} at {self.time_stamp}"
+        return f"Commented by {self.user} to {self.blog} "
 
 class View(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
