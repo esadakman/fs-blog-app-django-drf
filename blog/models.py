@@ -24,8 +24,8 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(
         Category, related_name="post_category", on_delete=models.CASCADE)
-    post_image = models.ImageField(
-        default="blog_default.png", upload_to="blog_pics") 
+    post_image = models.URLField(max_length=300, blank=True,
+                            default="https://www.mericity.com/resources/images/Default.jpg")
     slug = models.SlugField(blank=True, unique=True)
     blog_comment = models.PositiveIntegerField(default=0)
 
@@ -34,15 +34,7 @@ class Post(models.Model):
 
 
     def save(self, *args, **kwargs):  
-        super().save(*args, **kwargs)
-
-        img = Image.open(self.post_image.path)
-
-        if img.height > 300 or img.width > 300:
-            output_size = (400, 400)
-            img.thumbnail(output_size)
-            img.save(self.post_image.path)
-
+        super().save(*args, **kwargs) 
 
 class Like(models.Model):
     post = models.ForeignKey(Post, related_name="post_likes", on_delete=models.CASCADE)
@@ -68,4 +60,4 @@ class View(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.user.username
+        return  f"{self.user.username} viewed {self.post} "

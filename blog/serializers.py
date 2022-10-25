@@ -79,3 +79,4 @@ class PostSerializer(serializers.ModelSerializer):
         return View.objects.filter(post=obj.id).count()
 
 
+ 

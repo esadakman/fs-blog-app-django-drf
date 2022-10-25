@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics , status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response 
 from .models import Category, Post, Like, Comment, View
@@ -7,13 +6,11 @@ from .serializers import (
     CategorySerializer,
     PostSerializer,
     LikeSerializer,
-    CommentSerializer,
-    PostUserSerializer
+    CommentSerializer, 
 )
 from rest_framework import permissions
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from .pagination import  MyLimitOffsetPagination
-# Create your views here.
+from .pagination import  MyLimitOffsetPagination 
 
 
 class CategoryView(generics.ListCreateAPIView):
@@ -25,8 +22,11 @@ class CategoryView(generics.ListCreateAPIView):
 class PostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    pagination_class = MyLimitOffsetPagination
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = MyLimitOffsetPagination
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -45,7 +45,19 @@ class LikeView(generics.ListCreateAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
 
-     
+    def create(self, request, *args, **kwargs):
+        user = request.data.get('user_id')
+        post = request.data.get('post')
+        serializer = self.get_serializer(data=request.data)
+        exists_like = Like.objects.filter(user_id=user, post=post)
+        serializer.is_valid(raise_exception=True)
+        if exists_like:
+            exists_like.delete()
+        else:
+            self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
 
 class CommentView(generics.CreateAPIView):
     queryset = Comment.objects.all()
@@ -58,4 +70,4 @@ class CommentView(generics.CreateAPIView):
         user = self.request.user
         comments = Comment.objects.filter(blog=blog, user=user)
         serializer.save(blog=blog, user=user)
-
+ 
