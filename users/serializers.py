@@ -23,7 +23,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(
         write_only=True,
         required=True,
-        validators=[validate_password], 
+        validators=[validate_password],
         style={"input_type": "password"}
     )
 
@@ -39,7 +39,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'password2'
         ]
 
-        extra_kwargs = { 
+        extra_kwargs = {
             "password": {"write_only": True},
             "password2": {"write_only": True},
             'first_name': {'required': True},
@@ -65,7 +65,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name')
+        fields = ('id', 'username', 'email',  'first_name', 'last_name')
+        # fields = ('id',  'email',  'first_name', 'last_name') 
+    extra_kwargs = {
+        "username": {'required': False},
+    }
 
 
 class CustomTokenSerializer(TokenSerializer):
@@ -74,31 +78,47 @@ class CustomTokenSerializer(TokenSerializer):
 
     class Meta(TokenSerializer.Meta):
         fields = ('key', 'user')
+     
 
-class ProfileUpdateForm(serializers.ModelSerializer): 
+
+class ProfileUpdateForm(serializers.ModelSerializer):
     user = UserTokenSerializer()
     class Meta:
-        model = Profile 
+        model = Profile
         fields = (
+            'user',
             'image',
-            'user'
         )
-
+    
     def update(self, instance, validated_data):
-        user_data = validated_data.pop('user')
-        user = instance.user
+        user_data = validated_data.pop('user') 
+        user = instance.user 
 
         instance.image = validated_data.get('image', instance.image)
         instance.save()
+        print(user.pk)
+        print(instance.pk)
+        
+        if user.pk != instance.pk + 2:
+            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
 
         user.username = user_data.get(
             'username',
             user.username
         )
+        user.first_name = user_data.get(
+            'first_name',
+            user.first_name
+        )
+        user.last_name = user_data.get(
+            'last_name',
+            user.last_name
+        )
         user.email = user_data.get(
             'email',
             user.email
-         )
+        )
         user.save()
+        
 
         return instance

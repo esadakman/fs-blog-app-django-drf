@@ -8,8 +8,7 @@ class UserModel(User):
         return self.profile
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    print(user)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  
     image = models.ImageField(default="default.webp", upload_to="profile_pics")
 
     def __str__(self):
