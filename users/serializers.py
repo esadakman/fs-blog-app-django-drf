@@ -81,6 +81,7 @@ class ProfileUpdateForm(serializers.ModelSerializer):
     class Meta:
         model = Profile 
         fields = (
+            'id',
             'image',
             'user'
         )
@@ -108,6 +109,10 @@ class ProfileUpdateForm(serializers.ModelSerializer):
             'last_name',
             user.last_name
          )
+        user.id = user_data.get(
+            'id',
+            user.id
+         ) 
         user.save()
 
         return instance

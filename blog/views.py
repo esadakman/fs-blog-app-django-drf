@@ -22,7 +22,7 @@ class CategoryView(generics.ListCreateAPIView):
 class PostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly] 
     pagination_class = MyLimitOffsetPagination
 
     def perform_create(self, serializer):

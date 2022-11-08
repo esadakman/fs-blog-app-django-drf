@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Category, Post,  Like, Comment, View 
+from users.serializers import ProfileUpdateForm
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,7 +46,9 @@ class PostSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
     view_count = serializers.SerializerMethodField()
-
+    author = serializers.StringRelatedField(read_only=True)
+    # asd =   serializers.StringRelatedField(read_only=True) 
+    # asd = serializers.SerializerMethodField()
     class Meta:
         model = Post
         # fields = '__all__'
@@ -62,7 +65,7 @@ class PostSerializer(serializers.ModelSerializer):
             "post_like",
             "comment_count",
             "view_count",
-            "like_count",
+            "like_count", 
         )
         read_only_fields = (
             "date_posted",
