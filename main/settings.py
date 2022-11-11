@@ -44,8 +44,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'dj_rest_auth',
     'rest_framework.authtoken',
-    "corsheaders",
-    # 'hitcount'
+    "corsheaders", 
     # myApps
     'users',
     'blog',
