@@ -1,8 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from users.models import Profile
-from PIL import Image
+from users.models import Profile 
 # Create your models here.
 User = settings.AUTH_USER_MODEL
 
@@ -17,14 +16,13 @@ class Category(models.Model):
         return self.name
 
 
-class Post(models.Model):
-    print(Profile)
+class Post(models.Model): 
     title = models.CharField(max_length=100)
     content = models.TextField()
     author = models.ForeignKey(
         User,  on_delete=models.CASCADE,  related_name="post_author",)
     # default='Anonymous User',
-    # asd = models.ForeignKey(Profile,  on_delete=models.CASCADE, )
+    # asd = models.ForeignKey(Profile,  on_delete=models.CASCADE,null=True )
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(
         Category, related_name="post_category", on_delete=models.CASCADE)

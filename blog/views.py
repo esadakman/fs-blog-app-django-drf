@@ -24,6 +24,8 @@ class PostView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly] 
     pagination_class = MyLimitOffsetPagination
+    
+    
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -34,6 +36,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     lookup_field = "slug"
     permission_classes = [IsAuthorOrReadOnly]
+    
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

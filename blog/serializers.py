@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Post,  Like, Comment, View 
+from .models import Category, Post,  Like, Comment, View
 from users.serializers import ProfileUpdateForm
 
 
@@ -31,7 +31,7 @@ class LikeSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField()
 
     class Meta:
-        model = Like  
+        model = Like
         fields = (
             "id",
             "user",
@@ -47,8 +47,11 @@ class PostSerializer(serializers.ModelSerializer):
     comment_count = serializers.SerializerMethodField()
     view_count = serializers.SerializerMethodField()
     author = serializers.StringRelatedField(read_only=True)
-    # asd =   serializers.StringRelatedField(read_only=True) 
+    # category = serializers.StringRelatedField(many=True)
+    # category_id = serializers.StringRelatedField()
+    # asd =   serializers.StringRelatedField(read_only=True)
     # asd = serializers.SerializerMethodField()
+
     class Meta:
         model = Post
         # fields = '__all__'
@@ -57,6 +60,7 @@ class PostSerializer(serializers.ModelSerializer):
             "title",
             "author",
             "category",
+            # 'category_name',
             "content",
             "post_image",
             "date_posted",
@@ -65,7 +69,7 @@ class PostSerializer(serializers.ModelSerializer):
             "post_like",
             "comment_count",
             "view_count",
-            "like_count", 
+            "like_count",
         )
         read_only_fields = (
             "date_posted",
@@ -79,7 +83,5 @@ class PostSerializer(serializers.ModelSerializer):
         return Comment.objects.filter(blog=obj.id).count()
 
     def get_view_count(self, obj):
+        # print(len(set(View.objects.filter(post=obj.id))), 'asd')s
         return View.objects.filter(post=obj.id).count()
-
-
- 

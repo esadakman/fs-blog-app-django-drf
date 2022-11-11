@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'dj_rest_auth',
     'rest_framework.authtoken',
-     "corsheaders",
-
+    "corsheaders",
+    # 'hitcount'
     # myApps
     'users',
     'blog',
@@ -155,7 +155,7 @@ REST_AUTH_SERIALIZERS = {
 #     "http://localhost:8080",
 #     "http://127.0.0.1:9000",
 # ]
-CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
