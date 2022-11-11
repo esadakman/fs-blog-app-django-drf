@@ -35,12 +35,14 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = "slug"
-    permission_classes = [IsAuthorOrReadOnly]
+    # permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated ]
     
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
+        # print(request.user) 
         View.objects.create(user=request.user, post=instance)
         return Response(serializer.data)
 
