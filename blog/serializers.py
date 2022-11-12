@@ -46,11 +46,13 @@ class PostSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
     view_count = serializers.SerializerMethodField()
-    author = serializers.StringRelatedField(read_only=True)
-    # category = serializers.StringRelatedField(many=True)
-    # category_id = serializers.StringRelatedField()
-    # asd =   serializers.StringRelatedField(read_only=True)
-    # asd = serializers.SerializerMethodField()
+    author_id = serializers.CharField(
+        source="author.id", read_only=True) 
+    author = serializers.StringRelatedField(read_only=True) 
+    author_pp =  serializers.CharField(
+        source="author.profile.image", read_only=True)
+    # author_pic =  serializers.CharField(
+    #     source="author.profile.image", read_only=True)
 
     class Meta:
         model = Post
@@ -59,8 +61,9 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "author",
-            "category",
-            # 'category_name',
+            "author_id",
+            "author_pp",
+            "category", 
             "content",
             "post_image",
             "date_posted",
