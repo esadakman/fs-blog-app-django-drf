@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.utils import timezone
-from users.models import Profile 
+from django.utils import timezone 
 # Create your models here.
 User = settings.AUTH_USER_MODEL
 
@@ -21,8 +20,7 @@ class Post(models.Model):
     content = models.TextField()
     author = models.ForeignKey(
         User,  on_delete=models.CASCADE,  related_name="post_author",)
-    # default='Anonymous User',
-    # asd = models.ForeignKey(Profile,  on_delete=models.CASCADE,null=True )
+    # default='Anonymous User', 
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(
         Category, related_name="post_category", on_delete=models.CASCADE)
@@ -30,6 +28,9 @@ class Post(models.Model):
                                  default="https://www.mericity.com/resources/images/Default.jpg")
     slug = models.SlugField(blank=True, unique=True)
     blog_comment = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ('-date_posted',)
 
     def __str__(self):
         return self.title
@@ -55,6 +56,8 @@ class Comment(models.Model):
         Post, related_name="post_comment", on_delete=models.CASCADE)
     content = models.TextField()
     time_stamp = models.DateTimeField(auto_now_add=True, blank=True)
+
+    
 
     def __str__(self):
         return f"Commented by {self.user} to {self.blog} "

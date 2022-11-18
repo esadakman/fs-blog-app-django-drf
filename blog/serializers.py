@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Category, Post,  Like, Comment, View
 from users.serializers import ProfileUpdateForm
-
+from django.utils.timezone import now
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +14,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    user_pp = serializers.CharField(
+        source="user.profile.image", read_only=True) 
 
     class Meta:
         model = Comment
@@ -22,6 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "content",
             "time_stamp",
             "user",
+            "user_pp",  
         )
         # fields = '__all__'
 
@@ -51,8 +54,8 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True) 
     author_pp =  serializers.CharField(
         source="author.profile.image", read_only=True)
-    # author_pic =  serializers.CharField(
-    #     source="author.profile.image", read_only=True)
+    category_name =  serializers.CharField(
+        source="category", read_only=True)
 
     class Meta:
         model = Post
@@ -64,6 +67,7 @@ class PostSerializer(serializers.ModelSerializer):
             "author_id",
             "author_pp",
             "category", 
+            "category_name", 
             "content",
             "post_image",
             "date_posted",

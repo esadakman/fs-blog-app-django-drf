@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'dj_rest_auth',
     'rest_framework.authtoken',
-    "corsheaders", 
+    "corsheaders",
     # myApps
     'users',
     'blog',
@@ -142,8 +142,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
-}
+    ],
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 2
+} 
 REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'users.serializers.CustomTokenSerializer',
 }
