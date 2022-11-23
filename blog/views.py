@@ -1,16 +1,18 @@
-from rest_framework import generics , status
+from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response 
+from rest_framework.response import Response
 from .models import Category, Post, Like, Comment, View
 from .serializers import (
     CategorySerializer,
     PostSerializer,
     LikeSerializer,
-    CommentSerializer, 
+    CommentSerializer,
 )
 from rest_framework import permissions
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from .pagination import  MyLimitOffsetPagination 
+from .pagination import MyLimitOffsetPagination
+from django_filters.rest_framework import DjangoFilterBackend  # for filter
+from rest_framework.filters import SearchFilter  # for search
 
 
 class CategoryView(generics.ListCreateAPIView):
@@ -22,10 +24,10 @@ class CategoryView(generics.ListCreateAPIView):
 class PostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly] 
-    pagination_class = MyLimitOffsetPagination
-    
-    
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = MyLimitOffsetPagination 
+    filter_backends = [SearchFilter]  # ! for local settings.
+    search_fields = ['title']
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -35,15 +37,14 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = "slug"
-    permission_classes = [permissions.IsAuthenticated&IsAuthorOrReadOnly] 
-    
+    permission_classes = [permissions.IsAuthenticated & IsAuthorOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        # print(request.user) 
+        serializer = self.get_serializer(instance) 
         View.objects.get_or_create(user=request.user, post=instance)
         return Response(serializer.data)
+
 
 class LikeView(generics.ListCreateAPIView):
     queryset = Like.objects.all()
@@ -61,7 +62,7 @@ class LikeView(generics.ListCreateAPIView):
             self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    
+
 
 class CommentView(generics.CreateAPIView):
     queryset = Comment.objects.all()
@@ -74,4 +75,3 @@ class CommentView(generics.CreateAPIView):
         user = self.request.user
         comments = Comment.objects.filter(blog=blog, user=user)
         serializer.save(blog=blog, user=user)
- 

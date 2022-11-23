@@ -6,7 +6,7 @@ from rest_framework import status
 from .serializers import RegisterSerializer, ProfileUpdateForm
 from .models import Profile
 from rest_framework.permissions import IsAuthenticated
-
+# from django.shortcuts import get_object_or_404
 
 class RegisterView(CreateAPIView):
     queryset = User.objects.all()
@@ -30,6 +30,12 @@ class ProfileView(RetrieveUpdateAPIView):
     queryset = Profile.objects.all() 
     permission_classes = (IsAuthenticated,)
     serializer_class = ProfileUpdateForm 
+
+    # def get_object(self):
+    #        print(self, 1) 
+    #        username= self.kwargs.get("username")
+    #        print(username, 11111) 
+    #        return get_object_or_404(User, username=username)
 
 
     # def get_queryset(self): 

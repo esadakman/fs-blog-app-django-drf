@@ -39,13 +39,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Third party apps:
+    # ! Third party apps:
     'rest_framework',
     'drf_yasg',
     'dj_rest_auth',
     'rest_framework.authtoken',
     "corsheaders",
-    # myApps
+    "django_filters",
+    # ? myApps
     'users',
     'blog',
 ]
@@ -143,6 +144,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend', # pip install django-filter # add to INSTALLED_APPS
+        'rest_framework.filters.SearchFilter', # Global settings for Search 
+    ]
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     # 'PAGE_SIZE': 2
 } 

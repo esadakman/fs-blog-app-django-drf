@@ -9,7 +9,8 @@ from .models import Profile
 @receiver(post_save, sender=User)    # receiver decorator take the signal (post_save in this case) and also the sender (User, in our case) as an argument
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.create(user=instance) 
+    # print(sender, instance, created, **kwargs)
 
 
 @receiver(post_save, sender=User)  

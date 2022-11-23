@@ -4,6 +4,6 @@ from .views import RegisterView, ProfileView
 urlpatterns = [
     path('auth/', include('dj_rest_auth.urls')),
     path('register/', RegisterView.as_view()),
-    path('profile/<int:pk>/', ProfileView.as_view(), name='profile'),
+    path('profile/<int:pk>/', ProfileView.as_view(), name='profile'), 
 
 ]
