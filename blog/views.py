@@ -10,11 +10,9 @@ from .serializers import (
 )
 from rest_framework import permissions
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from .pagination import MyLimitOffsetPagination
-from django_filters.rest_framework import DjangoFilterBackend  # for filter
+from .pagination import MyLimitOffsetPagination , MyCursorPagination
 from rest_framework.filters import SearchFilter  # for search
-
-
+from django_filters.rest_framework import DjangoFilterBackend  # for filter
 class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -25,9 +23,10 @@ class PostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    pagination_class = MyLimitOffsetPagination 
-    filter_backends = [SearchFilter]  # ! for local settings.
+    pagination_class = MyCursorPagination 
+    filter_backends = [DjangoFilterBackend, SearchFilter]  # ! for local settings.
     search_fields = ['title']
+    filterset_fields = ['author']
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
