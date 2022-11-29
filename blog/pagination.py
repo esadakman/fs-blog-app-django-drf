@@ -2,7 +2,7 @@ from rest_framework.pagination import CursorPagination, LimitOffsetPagination , 
 
 
 class MyLimitOffsetPagination(LimitOffsetPagination):
-    default_limit = 3 
+    default_limit = 6 
     # page_size=1
     # limit_query_param='count' 
     # max_limit='count'
