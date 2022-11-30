@@ -2,7 +2,7 @@
 
 <div align="center">
   <h3>
-    <a href="http://desad.pythonanywhere.com/">
+    <a href="https://desad.pythonanywhere.com/">
       Project Link
     </a>
   </h3>
@@ -51,7 +51,7 @@
 
 ## Project Link
 
-#### You can reach my project from [here](http://desad.pythonanywhere.com/) 👈
+#### You can reach my project from [here](https://desad.pythonanywhere.com/) 👈
 
 ## Preview of the Project
 

@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # ! Third party apps:
     'rest_framework',
-    'drf_yasg',
-    'dj_rest_auth',
     'rest_framework.authtoken',
+    'dj_rest_auth',
+    'drf_yasg',
     "corsheaders",
     "django_filters",
     # ? myApps

@@ -4,7 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
 from dj_rest_auth.serializers import TokenSerializer
 from .models import Profile
-
+from rest_framework.authtoken.models import Token
 
 class RegisterSerializer(serializers.ModelSerializer):
 
@@ -70,11 +70,11 @@ class UserTokenSerializer(serializers.ModelSerializer):
 
 
 class CustomTokenSerializer(TokenSerializer):
-
     user = UserTokenSerializer(read_only=True)
 
     class Meta(TokenSerializer.Meta):
-        fields = ('key', 'user')
+        model = Token
+        fields = ("key", "user")
 
 class ProfileUpdateForm(serializers.ModelSerializer): 
     user = UserTokenSerializer()
