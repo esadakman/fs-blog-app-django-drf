@@ -11,6 +11,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -24,7 +25,7 @@ class Post(models.Model):
     # default='Anonymous User', 
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(
-        Category, related_name="post_category", on_delete=models.CASCADE)
+        Category, related_name="post_category", on_delete=models.CASCADE, default=1)
     post_image = models.URLField(max_length=300, blank=True,
                                  default="https://www.mericity.com/resources/images/Default.jpg")
     slug = models.SlugField(blank=True, unique=True)
